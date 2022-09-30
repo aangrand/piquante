@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('./models/user.js');
-const Sauce = require('./models/Sauce.js');
+//const Sauce = require('./models/Sauce.js');
+const sauceRoutes = require('./routes/sauce.js')
 const dotenv = require("dotenv").config();
 
 var mongoose = require('mongoose');
@@ -16,27 +17,13 @@ mongoose.connect(process.env.MONGODB_URI,
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
-app.post('/api/sauce', (req, res, next) => {
-    console.log("coucou")
-    const sauce = new Sauce({
-        ...req.body
-    });
-    console.log(parse(req.body))
-    sauce.save()
-        .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-        .catch(error => res.status(400).json({ error }));
-});
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+  });
 
-app.use((req, res) => {
-    res.json({ message: 'Votre requête a bien été reçue !' });
-});
-
-
-
-// app.get('/api/user/:id', (req, res, next) => {
-//     User.findOne({ _id: req.params.id })
-//         .then(user => res.status(200).json(user))
-//         .catch(error => res.status(404).json({ error }));
-// });
+app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;
