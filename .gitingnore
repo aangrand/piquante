@@ -1,5 +1,0 @@
-./back/node_module
-./back/*
-
-./front/node_module
-./front/.*

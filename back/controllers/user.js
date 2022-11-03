@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+//Creation compte utilisateur
+
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
@@ -16,6 +18,8 @@ exports.signup = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }),);
 }
+
+// Connexion compte utilisateur + token
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -33,11 +37,9 @@ exports.login = (req, res, next) => {
                         token: jwt.sign(
                             { userId: user._id },
                             'SECRET',
-                            //`${process.env.RND_TKN}`,
                             { expiresIn: '24h' }
                         )
                     })
-                    //console.log('coucou', process.env.RND_TKN)
                 })
                 .catch(error => res.status(500).json({ error }))
         })
